@@ -1,32 +1,4 @@
 <?php
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Database credentials
-$host = 'php-pipeline-server.mysql.database.azure.com';
-$username = 'phpadmin';
-$password = 'farhan@1234';
-$database = 'test';
-$port = 3306;
-
-$ssl_ca = 'DigiCertGlobalRootCA.crt.pem';
-// Establish a connection
-// Create a new mysqli instance
-$conn = mysqli_init();
-
-// Set SSL options
-$conn->ssl_set(NULL, NULL, $ssl_ca, NULL, NULL);
-
-// Connect with SSL
-if (!$conn->real_connect($host, $username, $password, $database, $port, NULL, MYSQLI_CLIENT_SSL)) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-// Connection is successful
-echo "Connected successfully with SSL";
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $gender = $_POST['gender'];
@@ -34,21 +6,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $number = $_POST['number'];
 
-    // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO registration (firstName, lastName, gender, email, password, number) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $firstName, $lastName, $gender, $email, $password, $number);
 
-    // Execute the statement
-    if ($stmt->execute()) {
-        echo "New record created successfully";
+    // PHP Data Objects(PDO) Sample Code:
+    try {
+        $conn = new PDO("sqlsrv:server = tcp:test-db-server-101.database.windows.net,1433; Database = test", "farhan", "admin@123");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    catch (PDOException $e) {
+        print("Error connecting to SQL Server.");
+        die(print_r($e));
+    }
+    
+    // SQL Server Extension Sample Code:
+    $connectionInfo = array("UID" => "farhan", "pwd" => "admin@123", "Database" => "test", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+    $serverName = "tcp:test-db-server-101.database.windows.net,1433";
+    $conn = sqlsrv_connect($serverName, $connectionInfo);
+
+
+    // SQL query
+    $sql = "INSERT INTO registration (firstName, lastName, gender, email, password, number) VALUES (?, ?, ?, ?, ?, ?)";
+
+    // Parameters for the prepared statement
+    $params = array($firstName, $lastName, $gender, $email, $password, $number);
+
+    // Preparing the statement
+    $stmt = sqlsrv_prepare($conn, $sql, $params);
+
+    // Executing the statement
+    if(sqlsrv_execute($stmt)) {
+        echo "Registration successfully...";
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error in executing statement.\n";
+        die(print_r(sqlsrv_errors(), true));
     }
 
-    // Close the statement
-    $stmt->close();
-}
-
-// Close the connection
-$conn->close();
+    // Closing the connection
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_close($conn);
 ?>
