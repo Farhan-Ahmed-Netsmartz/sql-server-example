@@ -6,7 +6,7 @@
     $password = $_POST['password'];
     $number = $_POST['number'];
 
-----Make changes here------
+//----Make changes here------
     // PHP Data Objects(PDO) Sample Code:
     try {
         $conn = new PDO("sqlsrv:server = tcp:test-db-server-101.database.windows.net,1433; Database = test", "farhan", "admin@123");
@@ -21,7 +21,7 @@
     $connectionInfo = array("UID" => "farhan", "pwd" => "admin@123", "Database" => "test", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
     $serverName = "tcp:test-db-server-101.database.windows.net,1433";
     $conn = sqlsrv_connect($serverName, $connectionInfo);
-----Make changes above------
+//----Make changes above------
 
     // SQL query
     $sql = "INSERT INTO registration (firstName, lastName, gender, email, password, number) VALUES (?, ?, ?, ?, ?, ?)";
