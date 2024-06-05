@@ -7,10 +7,15 @@
     $number = $_POST['number'];
 
 //----Make changes here------
+ // Fetching environment variables from Azure Web App
+    $db_server = getenv('DB_SERVER');
+    $db_database = getenv('DB_DATABASE');
+    $db_username = getenv('DB_USERNAME');
+    $db_password = getenv('DB_PASSWORD');
     // PHP Data Objects(PDO) Sample Code:
     // PHP Data Objects(PDO) Sample Code:
     try {
-        $conn = new PDO("sqlsrv:server = tcp:june5-sql-test-1-db-server.database.windows.net,1433; Database = june5-sql-test-1-db", "farhan", "admin@123");
+        $conn = new PDO("sqlsrv:server = tcp:$db_server,1433; Database = $db_database", $db_username, $db_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch (PDOException $e) {
@@ -19,8 +24,8 @@
     }
     
     // SQL Server Extension Sample Code:
-    $connectionInfo = array("UID" => "farhan", "pwd" => "admin@123", "Database" => "june5-sql-test-1-db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
-    $serverName = "tcp:june5-sql-test-1-db-server.database.windows.net,1433";
+    $connectionInfo = array("UID" => $db_username, "pwd" => $db_password, "Database" => $db_database, "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+    $serverName = "tcp:$db_server,1433";
     $conn = sqlsrv_connect($serverName, $connectionInfo);
 //----Make changes above------
 
