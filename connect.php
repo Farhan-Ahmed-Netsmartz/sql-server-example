@@ -8,8 +8,9 @@
 
 //----Make changes here------
     // PHP Data Objects(PDO) Sample Code:
+    // PHP Data Objects(PDO) Sample Code:
     try {
-        $conn = new PDO("sqlsrv:server = tcp:test-db-server-101.database.windows.net,1433; Database = test", "farhan", "admin@123");
+        $conn = new PDO("sqlsrv:server = tcp:june5-sql-test-1-db-server.database.windows.net,1433; Database = june5-sql-test-1-db", "farhan", "{your_password_here}");
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch (PDOException $e) {
@@ -18,8 +19,8 @@
     }
     
     // SQL Server Extension Sample Code:
-    $connectionInfo = array("UID" => "farhan", "pwd" => "admin@123", "Database" => "test", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
-    $serverName = "tcp:test-db-server-101.database.windows.net,1433";
+    $connectionInfo = array("UID" => "farhan", "pwd" => "{your_password_here}", "Database" => "june5-sql-test-1-db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+    $serverName = "tcp:june5-sql-test-1-db-server.database.windows.net,1433";
     $conn = sqlsrv_connect($serverName, $connectionInfo);
 //----Make changes above------
 
